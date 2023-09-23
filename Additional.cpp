@@ -21,6 +21,10 @@ string DecToBin(int elem, int n)
 void print(const multiset& arr)
 {
 	cout << "Multiset contains next items: ";
+	if (arr.size() == 0) {
+		cout << "empty." << endl;
+	}
+	
 	for (int i = 0; i < arr.size(); i++) {
 		cout << "(" << arr[i].first << ";" << arr[i].second << "), ";
 	}
@@ -55,7 +59,7 @@ multiset afillMSET(const multiset& U, int power) {
 		// Если MSET не содержит elem
 		if (contains(MSET, elem) == -1) { 
 			// Добавляем этот элемент, выбирая случайно кратность
-			MSET.push_back(make_pair(elem.first, rand() % elem.second));
+			MSET.push_back(make_pair(elem.first, rand() % elem.second + 1));
 		}
 	}
 	return MSET;
@@ -69,19 +73,24 @@ multiset mfillMSET(const multiset& U, int power) {
 		int mult;
 		string val;
 
-		cout << endl << "Enter the value of the Multiset element and its multiplicity (value must be one of the elements in Universal set; multiplicity must be a non-negative integer): ";
+		cout << endl << "Enter the value of the Multiset element and \
+its multiplicity (value must be one of the elements in Universal set; \
+multiplicity must be a non-negative integer): ";
 		cin >> val >> mult;
 
 		if (cin.fail()) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Invalid input. Please enter a valid integer for multiplicity." << endl;
+			cout << "Invalid input. Please enter a valid integer for \
+multiplicity." << endl;
 			continue;
 		}
 
 		bool found = false;
+		int acc_mult = 0;
 		for (const auto& element : U) {
-			if (element.first == val && mult >= 0) {
+			if (element.first == val && mult > 0) {
+				acc_mult = element.second;
 				found = true;
 				break;
 			}
@@ -89,11 +98,17 @@ multiset mfillMSET(const multiset& U, int power) {
 
 		if (!found) {
 			cout << "Invalid input. ";
-			if (mult < 0) {
-				cout << "Multiplicity must be a non-negative integer. ";
-			}
-			cout << "Please enter a valid value from Universal set and non-negative integer for multiplicity." << endl;
+			cout << "Please enter a valid value from Universal set \
+and positive integer for multiplicity." << endl;
 			continue;
+		}
+		else {
+			if (mult <= 0 or mult > acc_mult) {
+				cout << "Invalid input. ";
+				cout << "Multiplicity must be a positive integer \
+between 1 and " << acc_mult << "." << endl;
+				continue;
+			}
 		}
 
 		found = false;
@@ -105,12 +120,14 @@ multiset mfillMSET(const multiset& U, int power) {
 		}
 
 		if (found) {
-			cout << "The element is already in the multiset. Please try again." << endl;
+			cout << "The element is already in the multiset. \
+Please try again." << endl;
 			continue;
 		}
 
 		MSET.push_back(make_pair(val, mult));
-		// Увеличиваем счетчик только при успешном добавлении элемента
+		// Увеличиваем счетчик только при успешном добавлении\
+		 элемента
 		i++; 
 	}
 
@@ -157,7 +174,17 @@ multiset Complement(const multiset& A, const multiset& U) {
 	multiset ans;
 	for (int i = 0; i < A.size(); i++) {
 		int ind = contains(U, A[i]);
-		ans.push_back(make_pair(A[i].first, U[ind].second - A[i].second));
+		int mult = U[ind].second - A[i].second;
+		if (mult > 0) {
+			ans.push_back(make_pair(A[i].first, mult));
+		}
+		
+	}
+	for (int i = 0; i < U.size(); i++) {
+		int ind = contains(A, U[i]);
+		if (ind == -1) {
+			ans.push_back(U[i]);
+		}
 	}
 	
 	return ans;
@@ -211,21 +238,11 @@ multiset AlgDif(const multiset& A, const multiset& B) {
 				ans.push_back(make_pair(A[i].first, A[i].second - \
 					B[indB].second));
 			}
-			else {
-				ans.push_back(make_pair(A[i].first, 0));
-			}
+
 		}
 		// Если элемента нет в мультимножестве B
 		else {
 			ans.push_back(A[i]);
-		}
-	}
-	// Добавляем элементы из мультимножества B
-	for (int i = 0; i < B.size(); i++) {
-		int indA = contains(A, B[i]);
-		// Если элемента нет в мультимножестве A
-		if (indA == -1) {
-			ans.push_back(make_pair(B[i].first, 0));
 		}
 	}
 	return ans;
