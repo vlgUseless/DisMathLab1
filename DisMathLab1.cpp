@@ -1,5 +1,4 @@
 ﻿#include <iostream>
-#include <vld.h>
 #include <random>
 #include <math.h>
 #include "Additional.h"
@@ -14,7 +13,7 @@ int main()
         while (1)
         {
             int mx_sz = log2(A.max_size());
-            cout << "Enter the bit depth of the Universal set (it must be a positive integer number between 0 and " << mx_sz << ": ";
+            cout << "Enter the bit depth of the Universal set (it must be a positive integer number between 0 and " << mx_sz << "): ";
             cin >> n;
             if (cin.fail()) //returns true when input fails
             {
@@ -45,6 +44,31 @@ int main()
         cout << "Universal set: ";
         if (n == 0) {
             cout << "empty." << endl;
+
+            cout << endl << "Multiset A: empty." << endl;
+            cout << "Multiset B: empty." << endl;
+
+            cout << endl << "Union: empty." << endl;
+
+            cout << "Intersection: empty." << endl;
+
+            cout << "Complement A: empty." << endl;
+            cout << "Complement B: empty." << endl;
+
+            cout << "AlgSum (A + B): empty." << endl;
+
+            cout << "AlgDif (A - B): empty." << endl;
+            cout << "AlgDif (B - A): empty." << endl;
+           
+
+            cout << "Diff (A \\ B): empty." << endl;
+  
+            cout << "Diff (B \\ A): empty." << endl;
+
+
+            cout << "SymDiff: empty." << endl;
+
+
             continue;
         }
         int sz = 1 << n;
@@ -54,7 +78,7 @@ int main()
         print(Uni);
 
 
-        cout << "Enter the powers of the Multisets (it must be a positive integer numbers less than or equal " << n << "): ";
+        cout << "Enter the powers of the Multisets (it must be a positive integer numbers less than or equal " << sz << "): ";
         int a_pow = 0, b_pow = 0;
         cin >> a_pow >> b_pow;
         while (1)
